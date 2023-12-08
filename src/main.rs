@@ -1,28 +1,33 @@
 use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
 
 
-#[get("/info")]
-async fn index() -> impl Responder {
+#[get("/")]
+async fn hello() -> impl Responder {
     HttpResponse::Ok()
-    //    .content_type("text/html; charset=utf-8")
-       .body("<h1>Hello, world!</h1>")
+       .body("Hello, world!")
 }
 
 #[post("/echo")]
-async fn post_info() -> impl Responder {
+async fn echo() -> impl Responder {
     HttpResponse::Ok()
-    //   .content_type("text/html; charset=utf-8")
-      .body("<h1>Hello, world!</h1>")
+      .body("123")
+}
+
+async fn manual_hello() -> impl Responder {
+    HttpResponse::Ok()
+     .body("Hey there")
 }
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
-           .service(index)
-           .service(post_info)
+           .service(hello)
+           .service(echo)
+           //.service(manual_hello)
+           .route("/hey", web::get().to(manual_hello))
     })
-   .bind("0.0.0.0:9090")?
+   .bind("127.0.0.1:8080")?
    .run()
    .await
 }
